@@ -12,13 +12,13 @@ public class MainPanel extends JPanel {
 	static final int SCREEN_CENTER_X = SCREEN_HEIGHT / 2;
 	static final int SCREEN_CENTER_Y = SCREEN_WIDTH / 2;
 	static final int FIELD_SIZE = 50;
-	static final Color BUTTON_BACKGROUND_COLOR = Color.white;
+	static final Color LABEL_DEFAULT_COLOR = Color.white;
 	Font defaultFont;
 	Board board;
-	JButton[][] buttons;
-	JButton selectedButton;
+	JLabel[][] labels;
+	JLabel selectedLabel;
 	JPanel boardPanel;
-	Color focusColor;
+	Color hoverColor;
 	Color selectedColor;
 
 	MainPanel() {
@@ -29,42 +29,36 @@ public class MainPanel extends JPanel {
 		boardPanel = new JPanel();
 		boardPanel.setVisible(true);
 		boardPanel.setLayout(null);
+		boardPanel.setFocusable(true);
 		boardPanel.setBackground(Color.gray);
 		boardPanel.setPreferredSize(new Dimension(9 * FIELD_SIZE, 9 * FIELD_SIZE));
-		// this.addKeyListener(new MyKeyAdapter());
-		initbuttons();
+		this.addKeyListener(new PanelKeyAdapter());
+		initlabels();
 		this.add(boardPanel);
 	}
 
 	private void initVariables() {
 		defaultFont = new Font("Consolas", Font.PLAIN, 20);
-		focusColor = new Color(0, 0, 255, 20);
-		selectedColor = new Color(0, 255, 0, 100);
+		hoverColor = new Color(220, 220, 255);
+		selectedColor = new Color(155, 255, 155);
 	}
 
-	private void initbuttons() {
-		buttons = new JButton[9][9];
+	private void initlabels() {
+		labels = new JLabel[9][9];
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				buttons[i][j] = new JButton();
-				buttons[i][j].setBounds(i * FIELD_SIZE, j * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
-				buttons[i][j].setVisible(true);
-				buttons[i][j].setBackground(Color.white);
-				buttons[i][j].setHorizontalAlignment(JButton.CENTER);
-				buttons[i][j].setFont(defaultFont);
-				buttons[i][j].setRolloverEnabled(false);
-				buttons[i][j].addMouseListener(new ButtonMouseAdapter());
-				buttons[i][j].setBorder(BorderFactory.createLineBorder(Color.black));
-				buttons[i][j].addFocusListener(new ButtonFocusAdapter());
-				buttons[i][j].addKeyListener(new ButtonKeyAdapter());
-				boardPanel.add(buttons[i][j]);
+				labels[i][j] = new JLabel();
+				labels[i][j].setBounds(i * FIELD_SIZE, j * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
+				labels[i][j].setVisible(true);
+				labels[i][j].setOpaque(true);
+				labels[i][j].setBackground(Color.white);
+				labels[i][j].setHorizontalAlignment(JLabel.CENTER);
+				labels[i][j].setFont(defaultFont);
+				labels[i][j].addMouseListener(new LabelMouseAdapter());
+				labels[i][j].setBorder(BorderFactory.createLineBorder(Color.black));
+				boardPanel.add(labels[i][j]);
 			}
 		}
-	}
-
-	public void buttonClicked(ActionEvent e) {
-		// selectedButton = (JButton) e.getSource();
-		// selectedButton.setBackground(new Color(0, 255, 0, 100));
 	}
 
 	public void test() {
@@ -100,52 +94,84 @@ public class MainPanel extends JPanel {
 		return res;
 	}
 
-	public class ButtonKeyAdapter extends KeyAdapter {
+	public class PanelKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if ((JButton) e.getSource() == selectedButton) {
-				switch (e.getKeyCode()) {
-				case KeyEvent.VK_0:
-					System.out.println("0");
-					break;
-				}
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_NUMPAD0:
+				selectedLabel.setText("0");
+				break;
+			case KeyEvent.VK_NUMPAD1:
+				selectedLabel.setText("1");
+				break;
+			case KeyEvent.VK_NUMPAD2:
+				selectedLabel.setText("2");
+				break;
+			case KeyEvent.VK_NUMPAD3:
+				selectedLabel.setText("3");
+				break;
+			case KeyEvent.VK_NUMPAD4:
+				selectedLabel.setText("4");
+				break;
+			case KeyEvent.VK_NUMPAD5:
+				selectedLabel.setText("5");
+				break;
+			case KeyEvent.VK_NUMPAD6:
+				selectedLabel.setText("6");
+				break;
+			case KeyEvent.VK_NUMPAD7:
+				selectedLabel.setText("7");
+				break;
+			case KeyEvent.VK_NUMPAD8:
+				selectedLabel.setText("8");
+				break;
+			case KeyEvent.VK_NUMPAD9:
+				selectedLabel.setText("9");
+				break;
 			}
-
 		}
 	}
 
-	public class ButtonFocusAdapter extends FocusAdapter {
+	public class LabelFocusAdapter extends FocusAdapter {
 		@Override
 		public void focusGained(FocusEvent e) {
-			selectedButton = (JButton) e.getSource();
-			selectedButton.setBackground(selectedColor);
-			System.out.println(selectedButton + " gained focus");
+			selectedLabel = (JLabel) e.getSource();
+			selectedLabel.setBackground(selectedColor);
 		}
 
 		@Override
 		public void focusLost(FocusEvent e) {
-			selectedButton.setBackground(BUTTON_BACKGROUND_COLOR);
-			selectedButton = null;
-			System.out.println(selectedButton + " lost focus");
+			selectedLabel.setBackground(LABEL_DEFAULT_COLOR);
+			selectedLabel = null;
 		}
 	}
 
-	public class ButtonMouseAdapter extends MouseAdapter {
+	public class LabelMouseAdapter extends MouseAdapter {
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			JButton hoveredButton = (JButton) e.getSource();
-			if (hoveredButton != selectedButton) {
-				hoveredButton.setBackground(focusColor);
+			JLabel hoveredLabel = (JLabel) e.getSource();
+			if (hoveredLabel != selectedLabel) {
+				hoveredLabel.setBackground(hoverColor);
 			}
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			JButton hoveredButton = (JButton) e.getSource();
-			if (hoveredButton != selectedButton) {
-				hoveredButton.setBackground(BUTTON_BACKGROUND_COLOR);
-			} else {
-				hoveredButton.setBackground(selectedColor);
+			JLabel hoveredLabel = (JLabel) e.getSource();
+			if (hoveredLabel != selectedLabel) {
+				hoveredLabel.setBackground(LABEL_DEFAULT_COLOR);
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			JLabel clickedLabel = (JLabel) e.getSource();
+			if (selectedLabel != clickedLabel) { // if not the same label as before
+				if (selectedLabel != null) { // if not first label
+					selectedLabel.setBackground(LABEL_DEFAULT_COLOR);
+				}
+				selectedLabel = clickedLabel;
+				selectedLabel.setBackground(selectedColor);
 			}
 		}
 	}
