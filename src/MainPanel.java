@@ -18,6 +18,7 @@ public class MainPanel extends JPanel {
 	JLabel[][] labels;
 	JLabel selectedLabel;
 	JPanel boardPanel;
+	JPanel[][] blocks;
 	Color hoverColor;
 	Color selectedColor;
 
@@ -30,7 +31,6 @@ public class MainPanel extends JPanel {
 		boardPanel.setVisible(true);
 		boardPanel.setLayout(null);
 		boardPanel.setFocusable(true);
-		boardPanel.setBackground(Color.gray);
 		boardPanel.setPreferredSize(new Dimension(9 * FIELD_SIZE, 9 * FIELD_SIZE));
 		this.addKeyListener(new PanelKeyAdapter());
 		initlabels();
@@ -55,7 +55,7 @@ public class MainPanel extends JPanel {
 				labels[i][j].setHorizontalAlignment(JLabel.CENTER);
 				labels[i][j].setFont(defaultFont);
 				labels[i][j].addMouseListener(new LabelMouseAdapter());
-				labels[i][j].setBorder(BorderFactory.createLineBorder(Color.black));
+				labels[i][j].setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
 				boardPanel.add(labels[i][j]);
 			}
 		}
@@ -97,37 +97,39 @@ public class MainPanel extends JPanel {
 	public class PanelKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_NUMPAD0:
-				selectedLabel.setText("0");
-				break;
-			case KeyEvent.VK_NUMPAD1:
-				selectedLabel.setText("1");
-				break;
-			case KeyEvent.VK_NUMPAD2:
-				selectedLabel.setText("2");
-				break;
-			case KeyEvent.VK_NUMPAD3:
-				selectedLabel.setText("3");
-				break;
-			case KeyEvent.VK_NUMPAD4:
-				selectedLabel.setText("4");
-				break;
-			case KeyEvent.VK_NUMPAD5:
-				selectedLabel.setText("5");
-				break;
-			case KeyEvent.VK_NUMPAD6:
-				selectedLabel.setText("6");
-				break;
-			case KeyEvent.VK_NUMPAD7:
-				selectedLabel.setText("7");
-				break;
-			case KeyEvent.VK_NUMPAD8:
-				selectedLabel.setText("8");
-				break;
-			case KeyEvent.VK_NUMPAD9:
-				selectedLabel.setText("9");
-				break;
+			if (selectedLabel != null) {
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_NUMPAD0:
+					selectedLabel.setText("0");
+					break;
+				case KeyEvent.VK_NUMPAD1:
+					selectedLabel.setText("1");
+					break;
+				case KeyEvent.VK_NUMPAD2:
+					selectedLabel.setText("2");
+					break;
+				case KeyEvent.VK_NUMPAD3:
+					selectedLabel.setText("3");
+					break;
+				case KeyEvent.VK_NUMPAD4:
+					selectedLabel.setText("4");
+					break;
+				case KeyEvent.VK_NUMPAD5:
+					selectedLabel.setText("5");
+					break;
+				case KeyEvent.VK_NUMPAD6:
+					selectedLabel.setText("6");
+					break;
+				case KeyEvent.VK_NUMPAD7:
+					selectedLabel.setText("7");
+					break;
+				case KeyEvent.VK_NUMPAD8:
+					selectedLabel.setText("8");
+					break;
+				case KeyEvent.VK_NUMPAD9:
+					selectedLabel.setText("9");
+					break;
+				}
 			}
 		}
 	}
