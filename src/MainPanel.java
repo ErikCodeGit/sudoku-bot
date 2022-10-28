@@ -18,7 +18,7 @@ public class MainPanel extends JPanel {
 	JLabel[][] labels;
 	JLabel selectedLabel;
 	JPanel boardPanel;
-	JPanel[][] blocks;
+	JButton solveButton;
 	Color hoverColor;
 	Color selectedColor;
 
@@ -26,15 +26,55 @@ public class MainPanel extends JPanel {
 		initVariables();
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setFocusable(true);
+		this.setLayout(null);
+		solveButton = new JButton("Solve");
+		solveButton.setBounds(SCREEN_CENTER_X + 100, SCREEN_HEIGHT - 100, 200, 100);
+		solveButton.setFont(defaultFont);
+		solveButton.setFocusable(false);
+		solveButton.addActionListener((e) -> solveButtonClicked());
 		board = new Board();
 		boardPanel = new JPanel();
 		boardPanel.setVisible(true);
 		boardPanel.setLayout(null);
 		boardPanel.setFocusable(true);
-		boardPanel.setPreferredSize(new Dimension(9 * FIELD_SIZE, 9 * FIELD_SIZE));
+		boardPanel.setBounds(SCREEN_CENTER_X - FIELD_SIZE / 2, 0, 9 * FIELD_SIZE, 9 * FIELD_SIZE);
 		this.addKeyListener(new PanelKeyAdapter());
 		initlabels();
 		this.add(boardPanel);
+		this.add(solveButton);
+	}
+
+	private void solveButtonClicked() {
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				if (labels[i][j].getText() != "") {
+					board.setNum(i, j, Integer.parseInt(labels[i][j].getText()));
+				} else {
+					board.setNum(i, j, 0);
+				}
+			}
+		}
+		Bot bot = new Bot(board);
+		board = bot.solve();
+		boolean isSolved = false;
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				isSolved = board.getRow(i)[j] != 0;
+			}
+		}
+		if (isSolved)
+			updateBoard();
+		else {
+			solveButton.setBackground(Color.red);
+		}
+	}
+
+	private void updateBoard() {
+		for (int i = 0; i < board.size; i++) {
+			for (int j = 0; j < board.size; j++) {
+				labels[i][j].setText(String.valueOf(board.getRow(i)[j]));
+			}
+		}
 	}
 
 	private void initVariables() {
@@ -67,13 +107,7 @@ public class MainPanel extends JPanel {
 				board.setNum(i, j, j + 1);
 			}
 		}
-		printBoard();
-	}
-
-	public void printBoard() {
-		for (int i = 0; i < 9; i++) {
-			System.out.println(arrayToString(board.getRow(i)));
-		}
+		board.print();
 	}
 
 	public String arrayToString(int[] array) {

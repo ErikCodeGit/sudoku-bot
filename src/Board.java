@@ -2,9 +2,10 @@
 public class Board {
 
 	private int[][] fields;
+	public int size = 9;
 
 	Board() {
-		fields = new int[9][9];
+		fields = new int[size][size];
 		fillField();
 	}
 	
@@ -34,6 +35,12 @@ public class Board {
 		return res;
 	}
 	
+	public int[][] getFields(){
+		return fields;
+	}
+	
+	
+	
 	public int[] getBlock(int x, int y) {
 		int[] res = new int[9];
 		int index = 0;
@@ -49,5 +56,14 @@ public class Board {
 	public void setNum(int row, int col, int val) {
 		if(val >= 0 && val <=9)
 		fields[row][col] = val;
+	}
+	
+	public void print() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				System.out.print(fields[i][j] + " ");
+			}
+			System.out.println();
+		}
 	}
 }
